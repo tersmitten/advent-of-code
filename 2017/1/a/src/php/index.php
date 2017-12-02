@@ -9,13 +9,13 @@ while ($line = fgets($f)) {
 fclose($f);
 
 $digits = str_split($fileContent, 1);
-// print_r($digits);
+$numDigits = count($digits);
 
 $sum = 0;
 foreach ($digits as $i => $digit) {
-	$nextDigit = $digits[$i + 1] ?? $digits[0];
+	$j = ($i + 1) % $numDigits;
 
-	// print_r(compact('digit', 'nextDigit'));
+	$nextDigit = $digits[$j];
 	if ($digit === $nextDigit) {
 		$sum += $digit;
 	}

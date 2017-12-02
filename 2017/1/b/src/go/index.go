@@ -22,24 +22,13 @@ func main() {
 
   digits := strings.Split(fileContent, "")
   numDigits := len(digits)
-  lastIndex := numDigits - 1
-  stepsForward := numDigits / 2
-  // fmt.Printf("%q\n", digits)
+  stepsForward := numDigits / 2;
 
   sum := 0
-  for i := 0; i < numDigits; i += 1 {
-    index := i + stepsForward
-    fallbackIndex := i - stepsForward
-    // fmt.Printf("%v - %v - %v\n", i, index, fallbackIndex)
-
-    digit, _ := strconv.Atoi(digits[i])
-    var nextDigit int
-    if (index <= lastIndex) {
-      nextDigit, _ = strconv.Atoi(digits[index])
-    } else {
-      nextDigit, _ = strconv.Atoi(digits[fallbackIndex])
-    }
-
+  for i, digit := range digits {
+    j := (i + stepsForward) % numDigits
+    digit, _ := strconv.Atoi(digit)
+    nextDigit, _ := strconv.Atoi(digits[j])
     if (digit == nextDigit) {
       sum += digit
     }
