@@ -23,4 +23,4 @@ foreach ($spreadsheet as $row) {
 	}
 }
 
-echo $sum . "\n";
+echo $sum . PHP_EOL;

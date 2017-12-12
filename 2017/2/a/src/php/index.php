@@ -13,4 +13,4 @@ foreach ($spreadsheet as $row) {
 	$sum += max($row) - min($row);
 }
 
-echo $sum . "\n";
+echo $sum . PHP_EOL;

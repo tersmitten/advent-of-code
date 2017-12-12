@@ -21,4 +21,4 @@ foreach ($digits as $i => $digit) {
 	}
 }
 
-echo $sum . "\n";
+echo $sum . PHP_EOL;

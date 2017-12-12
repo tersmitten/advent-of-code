@@ -12,7 +12,7 @@ for (; $j > 0; $j -= 1) {
 	if ((-1 * $width / 2 < $x && $x <= $width / 2) && (-1 * $height / 2 < $y && $y <= $height / 2)) {
 		$i += 1;
 		if ($i === $wantedSquareData) {
-			printf("%d\n", manhattanDistance([0, 0], [$x, $y]));
+			echo manhattanDistance([0, 0], [$x, $y]) . PHP_EOL;
 		}
 	}
 
