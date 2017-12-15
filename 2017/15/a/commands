@@ -1,0 +1,14 @@
+# documentation
+
+https://igor.io/2012/09/24/binary-parsing.html
+
+# php
+while true; do
+  diff -qw <(src/php/index.php < tests/input1.txt) <(cat tests/output1.txt);
+  sleep 2;
+done
+
+while true; do
+  src/php/index.php < tests/input0.txt | tee tests/output0.txt;
+  sleep 2;
+done
