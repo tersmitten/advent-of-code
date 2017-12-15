@@ -10,15 +10,25 @@ fclose($f);
 $factors = [16807, 48271];
 $divider = 2147483647;
 $values = $startingValues;
-$numMatches = 0;
-$numPairsToConsider = 40 * 10 ** 6;
-// $numPairsToConsider = 5;
+$numMatches = $i = 0;
+$numPairsToConsider = 5 * 10 ** 6;
 
-for ($i = 1; $i <= $numPairsToConsider; $i += 1) {
-	$values = [
-		calculateRemainder($values[0], $factors[0], $divider),
-		calculateRemainder($values[1], $factors[1], $divider)
-	];
+while ($i <= $numPairsToConsider) {
+	while (true) {
+		$values[0] = calculateRemainder($values[0], $factors[0], $divider);
+		if ($values[0] % 4 === 0) {
+			break;
+		}
+	}
+
+	while (true) {
+		$values[1] = calculateRemainder($values[1], $factors[1], $divider);
+		if ($values[1] % 8 === 0) {
+			break;
+		}
+	}
+
+	$i += 1;
 	$binaries = array_map('getLowest16Bits', $values);
 
 	if ($binaries[0] === $binaries[1]) {
