@@ -29,9 +29,7 @@ while ($i <= $numPairsToConsider) {
 	}
 
 	$i += 1;
-	$binaries = array_map('getLowest16Bits', $values);
-
-	if ($binaries[0] === $binaries[1]) {
+	if (getLowest16Bits($values[0]) === getLowest16Bits($values[1])) {
 		$numMatches += 1;
 	}
 }
@@ -45,5 +43,5 @@ function calculateRemainder(int $value, int $factor, int $divider): int
 
 function getLowest16Bits(int $remainder): int
 {
-	return substr((string)base_convert($remainder, 10, 2), -16);
+	return $remainder & 0xFFFF;
 }
