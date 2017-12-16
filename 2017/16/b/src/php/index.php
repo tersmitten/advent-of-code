@@ -2,9 +2,10 @@
 <?php
 $shortopts = '';
 $shortopts .= 'n:';
+$shortopts .= 'd:';
 $options = getopt($shortopts);
-if (empty($options['n'])) {
-	fwrite(STDERR, sprintf('Usage: %s [-n Number of programs]' . PHP_EOL, $argv[0]));
+if (empty($options['n']) || empty($options['d'])) {
+	fwrite(STDERR, sprintf('Usage: %s [-n Number of programs] [-d Number of dances]' . PHP_EOL, $argv[0]));
 	exit(1);
 }
 
@@ -14,11 +15,18 @@ fclose($f);
 
 $numPrograms = $options['n'];
 $aDecimal = 97;
-$programs = implode('', array_map('chr', range($aDecimal, $aDecimal + $numPrograms - 1)));
+$programs = $originalPrograms = implode('', array_map('chr', range($aDecimal, $aDecimal + $numPrograms - 1)));
+$numDances = $options['d'];
 
 // print_r(compact('sequenceOfDanceMoves', 'programs'));
 
-echo dance($programs, $sequenceOfDanceMoves) . PHP_EOL;
+for ($i = 1; $i <= $numDances; $i += 1) {
+	$programs = dance($programs, $sequenceOfDanceMoves);
+	if ($programs === $originalPrograms) {
+		$i = $numDances - ($numDances % $i);
+	}
+}
+echo $programs . PHP_EOL;
 
 function spin(int $param, string $programs): string
 {

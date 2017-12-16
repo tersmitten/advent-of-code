@@ -1,10 +1,32 @@
 #!/usr/bin/env php
 <?php
+$memoize = function($func)
+{
+	return function() use ($func)
+	{
+		static $cache = [];
+
+		$args = func_get_args();
+		$key = hash('fnv1a64', igbinary_serialize($args));
+		if (!isset($cache[$key])) {
+			$cache[$key] = call_user_func_array($func, $args);
+		}
+
+		return $cache[$key];
+	};
+};
+
+$memoizedDance = $memoize(function(string $programs, array $sequenceOfDanceMoves): string
+{
+	return dance($programs, $sequenceOfDanceMoves);
+});
+
 $shortopts = '';
 $shortopts .= 'n:';
+$shortopts .= 'd:';
 $options = getopt($shortopts);
-if (empty($options['n'])) {
-	fwrite(STDERR, sprintf('Usage: %s [-n Number of programs]' . PHP_EOL, $argv[0]));
+if (empty($options['n']) || empty($options['d'])) {
+	fwrite(STDERR, sprintf('Usage: %s [-n Number of programs] [-d Number of dances]' . PHP_EOL, $argv[0]));
 	exit(1);
 }
 
@@ -14,11 +36,18 @@ fclose($f);
 
 $numPrograms = $options['n'];
 $aDecimal = 97;
-$programs = implode('', array_map('chr', range($aDecimal, $aDecimal + $numPrograms - 1)));
+$programs = $originalPrograms = implode('', array_map('chr', range($aDecimal, $aDecimal + $numPrograms - 1)));
+$numDances = $options['d'];
 
 // print_r(compact('sequenceOfDanceMoves', 'programs'));
 
-echo dance($programs, $sequenceOfDanceMoves) . PHP_EOL;
+for ($i = 1; $i <= $numDances; $i += 1) {
+	$programs = $memoizedDance($programs, $sequenceOfDanceMoves);
+	if ($programs === $originalPrograms) {
+		echo $i . PHP_EOL;
+	}
+}
+echo $programs . PHP_EOL;
 
 function spin(int $param, string $programs): string
 {
