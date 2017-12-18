@@ -58,7 +58,7 @@ func SumAdjacentSquares(grid map[int]map[int]int, adjacentSquares [][]int) (sum 
     sum += grid[x][y]
   }
 
-  return sum;
+  return sum
 }
 
 func main() {

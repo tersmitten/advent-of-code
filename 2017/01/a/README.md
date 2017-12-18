@@ -1,4 +1,8 @@
-# php
+# implementations
+
+## php
+
+```sh
 while true; do
   src/php/index.php < tests/input1.txt;
   src/php/index.php < tests/input2.txt;
@@ -7,13 +11,18 @@ while true; do
   echo "";
   sleep 2;
 done
+```
 
+```sh
 while true; do
   src/php/index.php < tests/input0.txt;
   sleep 2;
 done
+```
 
-# go
+## go
+
+```sh
 while true; do
   go run src/go/index.go < tests/input1.txt;
   go run src/go/index.go < tests/input2.txt;
@@ -22,8 +31,11 @@ while true; do
   echo "";
   sleep 2;
 done
+```
 
+```sh
 while true; do
   go run src/go/index.go < tests/input0.txt;
   sleep 2;
 done
+```

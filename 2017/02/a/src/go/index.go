@@ -70,5 +70,5 @@ func main() {
     sum += max - min
   }
 
-  fmt.Println(strconv.Itoa(sum))
+  fmt.Println(sum)
 }

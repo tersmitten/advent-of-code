@@ -18,6 +18,7 @@ func sliceAtoi(sa []string) ([]int, error) {
     }
     si = append(si, i)
   }
+
   return si, nil
 }
 
@@ -45,5 +46,5 @@ func main() {
     }
   }
 
-  fmt.Println(strconv.Itoa(sum))
+  fmt.Println(sum)
 }

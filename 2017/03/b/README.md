@@ -2,7 +2,7 @@
 
 * https://stackoverflow.com/questions/2035522/get-adjacent-elements-in-a-two-dimensional-array
 
-# implemtations
+# implementations
 
 ## php
 

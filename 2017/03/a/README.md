@@ -3,7 +3,7 @@
 * https://stackoverflow.com/questions/3706219/algorithm-for-iterating-over-an-outward-spiral-on-a-discrete-2d-grid-from-the-or
 * http://calculator.vhex.net/post/calculator-result/manhattan-distance
 
-# implemtations
+# implementations
 
 ## php
 

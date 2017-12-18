@@ -28,10 +28,10 @@ func main() {
     j := (i + 1) % numDigits
     digit, _ := strconv.Atoi(digit)
     nextDigit, _ := strconv.Atoi(digits[j])
-    if (digit == nextDigit) {
+    if digit == nextDigit {
       sum += digit
     }
   }
 
-  fmt.Println(strconv.Itoa(sum))
+  fmt.Println(sum)
 }

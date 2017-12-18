@@ -22,17 +22,17 @@ func main() {
 
   digits := strings.Split(fileContent, "")
   numDigits := len(digits)
-  stepsForward := numDigits / 2;
+  stepsForward := numDigits / 2
 
   sum := 0
   for i, digit := range digits {
     j := (i + stepsForward) % numDigits
     digit, _ := strconv.Atoi(digit)
     nextDigit, _ := strconv.Atoi(digits[j])
-    if (digit == nextDigit) {
+    if digit == nextDigit {
       sum += digit
     }
   }
 
-  fmt.Println(strconv.Itoa(sum))
+  fmt.Println(sum)
 }
