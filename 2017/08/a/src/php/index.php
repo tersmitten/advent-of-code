@@ -31,7 +31,8 @@ foreach ($instructions as $instruction) {
 
 echo max($registers) . PHP_EOL;
 
-function evaluateCondition(int $left, string $operator, int $right) {
+function evaluateCondition(int $left, string $operator, int $right): bool
+{
 	switch($operator) {
 		case '==': return $left == $right;
 		case '===': return $left === $right;
@@ -45,7 +46,8 @@ function evaluateCondition(int $left, string $operator, int $right) {
 	}
 }
 
-function executeCommand(int $left, string $command, int $right) {
+function executeCommand(int $left, string $command, int $right): int
+{
 	switch($command) {
 		case 'inc': return $left += $right;
 		case 'dec': return $left -= $right;
