@@ -1,5 +1,7 @@
 #!/usr/bin/env php
 <?php
+$startingValues = [];
+
 $f = fopen('php://stdin', 'r');
 while ($row = fgets($f)) {
 	preg_match('/([\d]+)$/', $row, $matches);
