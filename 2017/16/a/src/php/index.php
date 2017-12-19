@@ -27,11 +27,10 @@ function spin(int $param, string $programs): string
 
 function exchange(array $params, string $programs): string
 {
-	$left = $programs[$params[0]];
-	$right = $programs[$params[1]];
+	$tmp = $programs[$params[0]];
 
-	$programs[$params[0]] = $right;
-	$programs[$params[1]] = $left;
+	$programs[$params[0]] = $programs[$params[1]];
+	$programs[$params[1]] = $tmp;
 
 	return $programs;
 }
@@ -41,10 +40,7 @@ function partner(array $params, string $programs): string
 	$left = strpos($programs, $params[0]);
 	$right = strpos($programs, $params[1]);
 
-	$programs[$left] = $params[1];
-	$programs[$right] = $params[0];
-
-	return $programs;
+	return exchange([$left, $right], $programs);
 }
 
 function dance(string $programs, array $sequenceOfDanceMoves): string
