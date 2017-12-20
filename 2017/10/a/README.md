@@ -6,7 +6,7 @@
 
 ```sh
 while true; do
-  diff -qw <(src/php/index.php -n 5 < tests/input1.txt < tests/input1.txt) <(cat tests/output1.txt);
+  diff -qw <(src/php/index.php -n 5 < tests/input1.txt) <(cat tests/output1.txt);
   sleep 2;
 done
 ```

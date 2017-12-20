@@ -9,7 +9,7 @@ if (empty($options['n'])) {
 }
 
 $f = fopen('php://stdin', 'r');
-$sequenceOfLengths = preg_split('/,\s?/', trim(fgets($f)));
+$sequenceOfLengths = array_filter(preg_split('/,\s?/', trim(fgets($f))));
 fclose($f);
 
 $numberOfElements = $options['n'];
@@ -26,15 +26,12 @@ for ($i = 0; $i < $numberOfLengths; $i += 1) {
 	for ($j = $currentPosition; $j < $endPosition; $j += 1) {
 		array_push($reversedSublist, $listOfNumbers[$j % $numberOfElements]);
 	}
-	// print_r(array_reverse($reversedSublist));
 	for ($j = $currentPosition; $j < $endPosition; $j += 1) {
 		$listOfNumbers[$j % $numberOfElements] = array_pop($reversedSublist);
 	}
 
 	$currentPosition += $currentLength + $skipSize;
 	$skipSize += 1;
-
-	// print_r(compact('i', 'currentLength', 'listOfNumbers', 'currentPosition', 'skipSize'));
 }
 
 echo $listOfNumbers[0] * $listOfNumbers[1] . PHP_EOL;
