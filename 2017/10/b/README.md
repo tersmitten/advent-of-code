@@ -1,6 +1,8 @@
-# implementations
+# documentation
 
 * https://github.com/golang/go/wiki/SliceTricks
+
+# implementations
 
 ## php
 
