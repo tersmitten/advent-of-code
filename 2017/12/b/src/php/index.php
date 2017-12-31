@@ -13,9 +13,16 @@ while ($row = fgets($f)) {
 }
 fclose($f);
 
-$groupWalk = new \Ds\Set();
-walkThroughVillage(0, $groupWalk, $programs);
-echo $groupWalk->count(). PHP_EOL;
+$groups = new \Ds\Set();
+foreach (array_keys($programs) as $id) {
+	$groupWalk = new \Ds\Set();
+	walkThroughVillage($id, $groupWalk, $programs);
+	$groupWalk->sort();
+
+	$groups->add(hash('fnv1a64', json_encode($groupWalk->toArray())));
+}
+
+echo $groups->count(). PHP_EOL;
 
 function walkThroughVillage(int $groupId, \Ds\Set $group, array $programs): \Ds\Set
 {

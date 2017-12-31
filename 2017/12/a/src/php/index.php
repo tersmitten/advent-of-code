@@ -13,9 +13,8 @@ while ($row = fgets($f)) {
 }
 fclose($f);
 
-$group0Walk = walkThroughVillage(0, [], $programs);
-
-echo count($group0Walk) . PHP_EOL;
+$groupWalk = walkThroughVillage(0, [], $programs);
+echo count($groupWalk) . PHP_EOL;
 
 function walkThroughVillage(int $groupId, array $group, array $programs): array
 {

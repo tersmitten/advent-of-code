@@ -1,6 +1,6 @@
 #!/usr/bin/env php
 <?php
-$programs = $group0Walk = [];
+$programs = $groupWalk = [];
 
 $f = fopen('php://stdin', 'r');
 while ($row = fgets($f)) {
@@ -13,9 +13,8 @@ while ($row = fgets($f)) {
 }
 fclose($f);
 
-walkThroughVillage(0, $group0Walk, $programs);
-
-echo count($group0Walk) . PHP_EOL;
+walkThroughVillage(0, $groupWalk, $programs);
+echo count($groupWalk) . PHP_EOL;
 
 function walkThroughVillage(int $groupId, array &$group, array $programs): void
 {
