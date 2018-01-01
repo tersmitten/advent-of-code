@@ -13,11 +13,21 @@ while ($row = fgets($f)) {
 }
 fclose($f);
 
-$severity = 0;
-foreach ($firewall as $depth => $range) {
-	if ($depth % (($range - 1) * 2) === 0) {
-		$severity += ($depth * $range);
+$delay = 0;
+while (true) {
+	$caught = false;
+	foreach ($firewall as $depth => $range) {
+		if (($depth + $delay) % (($range - 1) * 2) === 0) {
+			$caught = true;
+			$delay += 1;
+
+			break;
+		}
+	}
+
+	if (!$caught) {
+		break;
 	}
 }
 
-echo $severity . PHP_EOL;
+echo $delay . PHP_EOL;
