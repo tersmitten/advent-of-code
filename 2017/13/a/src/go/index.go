@@ -16,7 +16,7 @@ func main() {
 
   scanner := bufio.NewScanner(os.Stdin)
   for scanner.Scan() {
-    matches := regexp.MustCompile("^([\\d]+):\\s+([\\d]+)").FindAllStringSubmatch(strings.Trim(scanner.Text(), ""), -1)[0]
+    matches := regexp.MustCompile("^([\\d]+):\\s+([\\d]+)$").FindAllStringSubmatch(strings.Trim(scanner.Text(), ""), -1)[0]
 
     layer, _ := strconv.Atoi(matches[1])
     depth, _ := strconv.Atoi(matches[2])
