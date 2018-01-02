@@ -6,8 +6,8 @@ $f = fopen('php://stdin', 'r');
 while ($row = fgets($f)) {
 	preg_match('/^([\d]+):\s+([\d]+)$/', trim($row), $matches);
 
-	$depth = (int)$matches[1];
-	$range = (int)$matches[2];
+	$depth = $matches[1];
+	$range = $matches[2];
 
 	$firewall[$depth] = $range;
 }
