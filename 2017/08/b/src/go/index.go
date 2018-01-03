@@ -43,6 +43,7 @@ func executeCommand(left int, command string, right int) int {
 
 func main() {
   registers := make(map[string]int)
+  registerValues := []int{}
   instructions := [][]string{}
 
   scanner := bufio.NewScanner(os.Stdin)
@@ -76,15 +77,14 @@ func main() {
     commandValueInt, _ := strconv.Atoi(commandValue)
 
     if evaluateCondition(registers[conditionRegister], conditionOperator, conditionValueInt) {
-      registers[register] = executeCommand(registers[register], command, commandValueInt)
+      registerValue := executeCommand(registers[register], command, commandValueInt)
+
+      registers[register] = registerValue
+      registerValues = append(registerValues, registerValue)
     }
   }
 
-  sortedRegisters := []int{}
-  for _, register := range registers {
-    sortedRegisters = append(sortedRegisters, register)
-  }
-  sort.Ints(sortedRegisters)
+  sort.Ints(registerValues)
 
-  fmt.Println(sortedRegisters[len(sortedRegisters) - 1])
+  fmt.Println(registerValues[len(registerValues) - 1])
 }
