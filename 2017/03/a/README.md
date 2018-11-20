@@ -42,3 +42,17 @@ while true; do
   sleep 2;
 done
 ```
+
+# python
+
+```sh
+docker run --rm -i -t --name aoc-3a -p 127.0.0.1:6379:6379 redis;
+```
+
+```sh
+src/python/producer-consumer.py producer < tests/input0.txt;
+```
+
+```sh
+src/python/producer-consumer.py consumer < tests/input0.txt;
+```
