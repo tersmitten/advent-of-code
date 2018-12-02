@@ -18,3 +18,22 @@ while true; do
   sleep 2;
 done
 ```
+
+## go
+
+```sh
+while true; do
+  diff -qw <(go run src/go/index.go < tests/input02.txt) <(cat tests/output02.txt);
+  diff -qw <(go run src/go/index.go < tests/input03.txt) <(cat tests/output03.txt);
+  diff -qw <(go run src/go/index.go < tests/input04.txt) <(cat tests/output04.txt);
+  diff -qw <(go run src/go/index.go < tests/input05.txt) <(cat tests/output05.txt);
+  sleep 2;
+done
+```
+
+```sh
+while true; do
+  go run src/go/index.go < tests/input01.txt | tee tests/output01.txt;
+  sleep 2;
+done
+```
