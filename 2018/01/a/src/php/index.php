@@ -10,7 +10,7 @@ while ($line = fgets($f)) {
 fclose($f);
 
 foreach ($frequencyChanges as $frequencyChange) {
-	eval(sprintf('$resultingFrequency = %s %s;', $resultingFrequency, $frequencyChange));
+	$resultingFrequency += $frequencyChange;
 }
 
 echo $resultingFrequency . PHP_EOL;

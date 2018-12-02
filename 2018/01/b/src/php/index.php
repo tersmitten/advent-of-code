@@ -12,7 +12,7 @@ fclose($f);
 $seenFrequencies[] = $resultingFrequency;
 while (true) {
 	foreach ($frequencyChanges as $frequencyChange) {
-		eval(sprintf('$resultingFrequency = %s %s;', $resultingFrequency, $frequencyChange));
+		$resultingFrequency += $frequencyChange;
 
 		if (in_array($resultingFrequency, $seenFrequencies, true)) {
 			echo $resultingFrequency . PHP_EOL;
