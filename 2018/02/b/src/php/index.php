@@ -8,6 +8,7 @@ while ($line = fgets($f)) {
 }
 fclose($f);
 
+// Get unique pairs
 foreach ($boxIDs as $firstBoxID) {
 	foreach ($boxIDs as $secondBoxID) {
 		if (hash_equals($firstBoxID, $secondBoxID)) {
@@ -24,7 +25,8 @@ foreach ($boxIDs as $firstBoxID) {
 	}
 }
 
-foreach ($pairs as $key => $pair) {
+// Find common letters in pair
+foreach ($pairs as $pair) {
 	list($firstBoxID, $secondBoxID) = $pair;
 
 	$splittedFirstBoxID = str_split($firstBoxID, 1);
@@ -39,6 +41,7 @@ foreach ($pairs as $key => $pair) {
 	$commonLettersPerPair[] = $commonLetters;
 }
 
+// Sort by the number of common letters
 usort($commonLettersPerPair, function($a, $b) {
 	return strlen($b) - strlen($a);
 });
