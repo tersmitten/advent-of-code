@@ -1,6 +1,6 @@
 #!/usr/bin/env php
 <?php
-$boxIDs = $pairs = $commonLetters = [];
+$boxIDs = $pairs = $commonLettersPerPair = [];
 
 $f = fopen('php://stdin', 'r');
 while ($line = fgets($f)) {
@@ -24,17 +24,23 @@ foreach ($boxIDs as $firstBoxID) {
 	}
 }
 
-foreach ($pairs as $pair) {
+foreach ($pairs as $key => $pair) {
 	list($firstBoxID, $secondBoxID) = $pair;
-	// var_dump($pair);
 
 	$splittedFirstBoxID = str_split($firstBoxID, 1);
 	$splittedSecondBoxID = str_split($secondBoxID, 1);
-	$commonLetters = [];
+
+	$commonLetters = '';
 	foreach ($splittedFirstBoxID as $key => $value) {
 		if ($value === $splittedSecondBoxID[$key]) {
-			echo $value;
+			$commonLetters .= $value;
 		}
 	}
-	echo PHP_EOL;
+	$commonLettersPerPair[] = $commonLetters;
 }
+
+usort($commonLettersPerPair, function($a, $b) {
+	return strlen($b) - strlen($a);
+});
+
+echo $commonLettersPerPair[0] . PHP_EOL;
