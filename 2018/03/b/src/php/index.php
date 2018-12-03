@@ -13,35 +13,30 @@ while ($row = fgets($f)) {
 	$width = $matches[4];
 	$height = $matches[5];
 
-	$claims[] = [$claimID, $left, $top, $width, $height];
+	$claims[] = [$claimID, getCoordinates($left, $top, $width, $height)];
 }
 fclose($f);
 
 foreach ($claims as $claim) {
-	list($claimID, $left, $top, $width, $height) = $claim;
-
-	for ($y = $top; $y < $top + $height; $y += 1) {
-		for ($x = $left; $x < $left + $width; $x += 1) {
-			$key = "$x,$y";
-			if (array_key_exists($key, $claimed)) {
-				$overlapping[$key] = null;
-			}
-			$claimed[$key] = null;
+	list($claimID, $coordinates) = $claim;
+	foreach ($coordinates as $coordinate) {
+		$key = getKey($coordinate);
+		if (array_key_exists($key, $claimed)) {
+			$overlapping[$key] = null;
 		}
+		$claimed[$key] = null;
 	}
 }
 
 foreach ($claims as $claim) {
-	list($claimID, $left, $top, $width, $height) = $claim;
-
 	$hasOverlap = false;
-	for ($y = $top; $y < $top + $height; $y += 1) {
-		for ($x = $left; $x < $left + $width; $x += 1) {
-			$key = "$x,$y";
-			if (array_key_exists($key, $overlapping)) {
-				$hasOverlap = true;
-				continue;
-			}
+
+	list($claimID, $coordinates) = $claim;
+	foreach ($coordinates as $coordinate) {
+		$key = getKey($coordinate);
+		if (array_key_exists($key, $overlapping)) {
+			$hasOverlap = true;
+			continue;
 		}
 	}
 
@@ -49,4 +44,21 @@ foreach ($claims as $claim) {
 		echo $claimID	. PHP_EOL;
 		break;
 	}
+}
+
+function getCoordinates(int $left, int $top, int $width, int $height) : array {
+	$coordinates = [];
+	for ($y = $top; $y < $top + $height; $y += 1) {
+		for ($x = $left; $x < $left + $width; $x += 1) {
+			$coordinates[] = [$x, $y];
+		}
+	}
+
+	return $coordinates;
+}
+
+function getKey(array $coordinate): string {
+	list($x, $y) = $coordinate;
+
+	return "$x,$y";
 }
