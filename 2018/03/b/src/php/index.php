@@ -1,6 +1,6 @@
 #!/usr/bin/env php
 <?php
-$claims = $area = $overlap = [];
+$claims = $claimed = $overlapping = [];
 
 $f = fopen('php://stdin', 'r');
 while ($row = fgets($f)) {
@@ -19,31 +19,34 @@ fclose($f);
 
 foreach ($claims as $claim) {
 	list($claimID, $left, $top, $width, $height) = $claim;
-	// print_r($claim);
 
-	for ($y = 1; $y <= $top + $height; $y += 1) {
-		for ($x = 1; $x <= $left + $width; $x += 1) {
-			$value = null;
-			if ($y > $top && $y <= $top + $height && $x > $left && $x <= $left + $width) {
-				$value = $claimID;
+	for ($y = $top; $y < $top + $height; $y += 1) {
+		for ($x = $left; $x < $left + $width; $x += 1) {
+			$key = "$x,$y";
+			if (array_key_exists($key, $claimed)) {
+				$overlapping[$key] = null;
 			}
-
-			if (!isset($area[$y][$x])) {
-				$area[$y][$x] = $value;
-			} else {
-				if (!is_null($value)) {
-					$overlap["$x, $y"] = null;
-				}
-			}
+			$claimed[$key] = null;
 		}
 	}
 }
 
-function printArea(array $area) : void {
-	foreach ($area as $y) {
-		foreach ($y as $x) {
-			echo sprintf('%04d', $x) . "\t";
+foreach ($claims as $claim) {
+	list($claimID, $left, $top, $width, $height) = $claim;
+
+	$hasOverlap = false;
+	for ($y = $top; $y < $top + $height; $y += 1) {
+		for ($x = $left; $x < $left + $width; $x += 1) {
+			$key = "$x,$y";
+			if (array_key_exists($key, $overlapping)) {
+				$hasOverlap = true;
+				continue;
+			}
 		}
-		echo PHP_EOL;
+	}
+
+	if (!$hasOverlap) {
+		echo $claimID	. PHP_EOL;
+		break;
 	}
 }
