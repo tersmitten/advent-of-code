@@ -21,7 +21,7 @@ foreach ($boxIDs as $firstBoxID) {
 			continue;
 		}
 
-		$pairs["$firstBoxID-$secondBoxID"] = [$firstBoxID, $secondBoxID];
+		$pairs[$key1] = [$firstBoxID, $secondBoxID];
 	}
 }
 
