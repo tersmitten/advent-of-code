@@ -1,14 +1,14 @@
 #!/usr/bin/env php
 <?php
-$polymer = [];
+$polymer = '';
 
 $f = fopen('php://stdin', 'r');
 while ($line = fgets($f)) {
-	$polymer = str_split(trim($line), 1);
+	$polymer = trim($line);
 }
 fclose($f);
 
-// print_r($polymer);
+// echo $polymer . PHP_EOL;
 
 assert(isReactionPossible('a', 'A') === true);
 assert(isReactionPossible('A', 'a') === true);
@@ -19,46 +19,48 @@ assert(isReactionPossible('A', 'B') === false);
 assert(isReactionPossible('a', 'b') === false);
 assert(isReactionPossible('a', 'B') === false);
 
-$polymerLength = count($polymer);
-while (true) {
-	$index = 0;
-	while ($index < $polymerLength) {
-		$unit = $polymer[$index];
-		$nextIndex = $index + 1;
-		$nextUnit = $polymer[$nextIndex] ?? '';
+assert(removeReacting('abcd', 0) === 'cd');
+assert(removeReacting('abcd', 1) === 'ad');
+assert(removeReacting('abcd', 2) === 'ab');
+assert(removeReacting('abcd', 3) === 'abc');
+assert(removeReacting('abcd', 4) === 'abcd');
 
-		if (isReactionPossible($unit, $nextUnit)) {
-			unset($polymer[$index], $polymer[$nextIndex]);
-			break;
-		}
+$polymerLength = strlen($polymer);
+$index = $iterations = 0;
+while ($polymerLength > 0 && $index < $polymerLength) {
+	$iterations += 1;
 
-		$index += 1;
+	$unit = $polymer[$index];
+	$nextIndex = $index + 1;
+	$nextUnit = $polymer[$nextIndex] ?? '';
+
+	if (isReactionPossible($unit, $nextUnit)) {
+		$polymer = removeReacting($polymer, $index);
+		$polymerLength = strlen($polymer);
+		$index = 0;
+		continue;
 	}
 
-	$newPolymerLength = count($polymer);
-	if ($newPolymerLength === 0 || $newPolymerLength === $polymerLength) {
-		break;
-	}
-
-	$reorderedPolymer = array_values($polymer);
-	// print_r(compact('polymer', 'reorderedPolymer'));
-	$polymer = $reorderedPolymer;
-
-	$polymerLength = $newPolymerLength;
+	$index += 1;
 }
 
-echo count($polymer) . PHP_EOL;
+echo strlen($polymer) . PHP_EOL;
+// echo $iterations . PHP_EOL;
 
 function isReactionPossible(string $a, string $b) : bool {
-	if (hash_equals($a, $b)) {
+	if ($a === $b) {
 		return false;
 	}
 
 	$lowerA = strtolower($a);
 	$lowerB = strtolower($b);
-	if (!hash_equals($lowerA, $lowerB)) {
+	if ($lowerA !== $lowerB) {
 		return false;
 	}
 
 	return true;
+}
+
+function removeReacting(string $polymer, int $index) : string {
+	return substr_replace($polymer, '', $index, 2);
 }
