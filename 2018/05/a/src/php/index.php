@@ -26,10 +26,8 @@ assert(removeReacting('abcd', 3) === 'abc');
 assert(removeReacting('abcd', 4) === 'abcd');
 
 $polymerLength = strlen($polymer);
-$index = $iterations = 0;
+$index = 0;
 while ($polymerLength > 0 && $index < $polymerLength) {
-	$iterations += 1;
-
 	$unit = $polymer[$index];
 	$nextIndex = $index + 1;
 	$nextUnit = $polymer[$nextIndex] ?? '';
@@ -37,7 +35,7 @@ while ($polymerLength > 0 && $index < $polymerLength) {
 	if (isReactionPossible($unit, $nextUnit)) {
 		$polymer = removeReacting($polymer, $index);
 		$polymerLength = strlen($polymer);
-		$index = 0;
+		$index = max(0, $index - 1);
 		continue;
 	}
 
@@ -45,7 +43,6 @@ while ($polymerLength > 0 && $index < $polymerLength) {
 }
 
 echo strlen($polymer) . PHP_EOL;
-// echo $iterations . PHP_EOL;
 
 function isReactionPossible(string $a, string $b) : bool {
 	if ($a === $b) {
