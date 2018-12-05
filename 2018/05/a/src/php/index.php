@@ -62,5 +62,5 @@ function isReactionPossible(string $a, string $b) : bool {
 }
 
 function removeReacting(string $polymer, int $index) : string {
-	return substr_replace($polymer, '', $index, 2);
+	return substr($polymer, 0, $index) . substr($polymer, $index + 2);
 }
