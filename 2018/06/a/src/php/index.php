@@ -8,8 +8,12 @@ while ($line = fgets($f)) {
 }
 fclose($f);
 
-assert(manhattanDistance([1, 1], [1, 6]) === 5);
-assert(manhattanDistance([1, 1], [3, 4]) === 5);
+assert(manhattanDistance([4, 3], [1, 1]) === 5);
+assert(manhattanDistance([4, 3], [1, 6]) === 6);
+assert(manhattanDistance([4, 3], [8, 3]) === 4);
+assert(manhattanDistance([4, 3], [3, 4]) === 2);
+assert(manhattanDistance([4, 3], [5, 5]) === 3);
+assert(manhattanDistance([4, 3], [8, 9]) === 10);
 
 $xCoordinates = array_column($chronals, 0);
 $yCoordinates = array_column($chronals, 1);
@@ -53,10 +57,8 @@ echo max($numberOfClosestLocations) . PHP_EOL;
 
 function manhattanDistance(array $a, array $b): int {
 	if (count($a) !== count($b)) {
-		throw InvalidArgumentException::arraySizeNotMatch();
+		throw new InvalidArgumentException('Array sizes do not match');
 	}
 
-	return (int)array_sum(array_map(function (int $m, int $n) : int {
-		return abs($m - $n);
-	}, $a, $b));
+	return abs($a[0] - $b[0]) + abs($a[1] - $b[1]);
 }

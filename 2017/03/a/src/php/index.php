@@ -27,7 +27,7 @@ for (; $j > 0; $j -= 1) {
 function manhattanDistance(array $a, array $b): float
 {
 	if (count($a) !== count($b)) {
-		throw InvalidArgumentException::arraySizeNotMatch();
+		throw new InvalidArgumentException('Array sizes do not match');
 	}
 
 	return array_sum(array_map(function ($m, $n) {
