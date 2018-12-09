@@ -25,3 +25,7 @@ Thumbs.db
 # Other files #
 ###############
 !empty
+
+_*.php
+_*.go
+_*.py
