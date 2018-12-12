@@ -11,24 +11,7 @@ assert(getPowerLevel(122, 79, 57) === -5);
 assert(getPowerLevel(217, 196, 39) === 0);
 assert(getPowerLevel(101,153, 71) === 4);
 
-assert(getAdjacent(2, 2) === [
-	// topLeft
-	[1, 1],
-	// top
-	[2, 1],
-	// topRight
-	[3, 1],
-	// midLeft
-	[1, 2],
-	// midRight
-	[3, 2],
-	// botLeft
-	[1, 3],
-	// bot
-	[2, 3],
-	// botRight
-	[3, 3],
-]);
+assert(getAdjacent(2, 2) === [[1, 1], [2, 1], [3, 1], [1, 2], [3, 2], [1, 3], [2, 3], [3, 3]]);
 
 $maximumPowerLevel = PHP_INT_MIN;
 $topLeftFuelCell = [0, 0];
@@ -36,7 +19,7 @@ $topLeftFuelCell = [0, 0];
 $range = range(2, $gridSize - 1);
 foreach ($range as $y) {
 	foreach ($range as $x) {
-		$powerLevel = $totalPowerLevel = getPowerLevel($x, $y, $gridSerialNumber);
+		$totalPowerLevel = getPowerLevel($x, $y, $gridSerialNumber);
 		$adjacentFuelCells = getAdjacent($x, $y);
 		foreach ($adjacentFuelCells as $adjacentFuelCell) {
 			list($aX, $aY) = $adjacentFuelCell;
@@ -45,8 +28,7 @@ foreach ($range as $y) {
 
 		if ($totalPowerLevel > $maximumPowerLevel) {
 			$maximumPowerLevel = $totalPowerLevel;
-			list($aX, $aY) = $adjacentFuelCells[0];
-			$topLeftFuelCell = [$aX, $aY];
+			$topLeftFuelCell = $adjacentFuelCells[0];
 		}
 	}
 }
