@@ -11,10 +11,10 @@ import (
 
 type Claim struct {
 	claimID int
-	left int
-	top int
-	width int
-	height int
+	left    int
+	top     int
+	width   int
+	height  int
 }
 
 func main() {
