@@ -14,8 +14,8 @@ sort($lines);
 
 foreach ($lines as $line) {
 	if (preg_match('/^\[(.*)\] Guard #(\d+) begins shift$/', $line, $matches) > 0) {
-		$shifStart = $matches[1];
-		$shifStartTimestamp = strtotime($shifStart);
+		$shiftStart = $matches[1];
+		$shiftStartTimestamp = strtotime($shiftStart);
 		$guard = $matches[2];
 
 		continue;
