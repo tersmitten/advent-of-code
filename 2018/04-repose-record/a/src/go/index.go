@@ -7,6 +7,7 @@ import (
 	"os"
 	"regexp"
 	"sort"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -25,8 +26,15 @@ func Strtotime(str string) (int64, error) {
 
 func main() {
 	lines := []string{}
-	asleep := make(map[string]float64, 0)
-	asleepMinutes := make(map[string]map[int]int, 0)
+	asleep := make(map[int]float64, 0)
+	asleepMinutes := make(map[int]map[int]int, 0)
+
+	var guard int
+	var fallsAsleepTimestamp int64
+	var maxSleep float64
+	var guardWithMostSleep int
+	var maxFrequency int
+	var minuteMostSpendSleeping int;
 
 	scanner := bufio.NewScanner(os.Stdin)
 	for scanner.Scan() {
@@ -39,15 +47,12 @@ func main() {
 
 	sort.Strings(lines)
 
-	var guard string
-	var fallsAsleepTimestamp int64
-
 	for _, line := range lines {
 		shiftStartMatches := regexp.MustCompile("^\\[(.*)\\] Guard #(\\d+) begins shift$").FindStringSubmatch(line)
 		if len(shiftStartMatches) > 0 {
 			//shiftStart := shiftStartMatches[1]
 			//shiftStartTimestamp, _ := Strtotime(shiftStart)
-			guard = shiftStartMatches[2]
+			guard, _ = strconv.Atoi(shiftStartMatches[2])
 
 			continue;
 		}
@@ -68,10 +73,9 @@ func main() {
 			asleep[guard] += math.Abs(float64(fallsAsleepTimestamp - wakesUpTimestamp)) / Minute
 
 			for timestamp := fallsAsleepTimestamp; timestamp < wakesUpTimestamp; timestamp += Minute {
-				minute := time.Unix(timestamp, 0).Minute()
-
+				minute := time.Unix(timestamp, 0).UTC().Minute()
 				if _, ok := asleepMinutes[guard]; !ok {
-					asleepMinutes[guard] = make(map[int]int)
+					asleepMinutes[guard] = make(map[int]int, 0)
 				}
 
 				asleepMinutes[guard][minute] += 1
@@ -81,6 +85,19 @@ func main() {
 		}
 	}
 
-	fmt.Println(asleep)
-	fmt.Println(asleepMinutes)
+	for guard, sleep := range asleep {
+		if sleep > maxSleep {
+			guardWithMostSleep = guard
+			maxSleep = sleep
+		}
+	}
+
+	for minute, frequency := range asleepMinutes[guardWithMostSleep] {
+		if frequency > maxFrequency {
+			minuteMostSpendSleeping = minute
+			maxFrequency = frequency
+		}
+	}
+
+	fmt.Println(guardWithMostSleep * minuteMostSpendSleeping)
 }
