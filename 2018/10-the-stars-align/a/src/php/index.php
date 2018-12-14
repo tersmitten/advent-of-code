@@ -19,45 +19,47 @@ while ($line = fgets($f)) {
 }
 fclose($f);
 
-//print_r(compact('points'));
-
-//$xCoordinates = array_column($points, 0);
-//$yCoordinates = array_column($points, 1);
-//
-//$minimalX = min($xCoordinates);
-//$maximalX = max($xCoordinates);
-//$minimalY = min($yCoordinates);
-//$maximalY = max($yCoordinates);
-
-//print_r(compact('minimalX', 'maximalX', 'minimalY', 'maximalY'));
-
-//foreach (range($minimalY, $maximalY) as $y) {
-//	foreach (range($minimalX, $maximalX) as $x) {
-//		$grid[$y][$x] = '.';
-//	}
-//}
-//
-//foreach ($points as $point) {
-//	list($x, $y) = $point;
-//	$grid[$y][$x] = '#';
-//}
-
-$timeline[0] = $points;
-foreach (range(1, $options['s'] - 1) as $t) {
-	foreach ($timeline[$t - 1] as $i => $point) {
+$minimalGrid = 0;
+$minimalGridSize = [];
+$minimalGridProduct = PHP_INT_MAX;
+foreach (range(1, $options['s'] - 1) as $tI) {
+	foreach ($points as $pI => $point) {
 		list($x, $y, $vX, $vY) = $point;
 
-		$points[$i][0] = $x + ($t * $vX);
-		$points[$i][1] = $y + ($t * $vY);
+		$timeline[$tI][$pI][0] = $x + ($tI * $vX);
+		$timeline[$tI][$pI][1] = $y + ($tI * $vY);
 	}
-	$timeline[$t] = $points;
+
+	$xCoordinates = array_column($timeline[$tI], 0);
+	$yCoordinates = array_column($timeline[$tI], 1);
+
+	$minimalX = min($xCoordinates);
+	$maximalX = max($xCoordinates);
+	$minimalY = min($yCoordinates);
+	$maximalY = max($yCoordinates);
+
+	$deltaX = abs($minimalX - $maximalX);
+	$deltaY = abs($minimalY - $maximalY);
+
+	$gridProduct = $deltaX * $deltaY;
+	if ($gridProduct < $minimalGridProduct) {
+		$minimalGrid = $tI;
+		$minimalGridSize = [$deltaX, $deltaY];
+		$minimalGridProduct = $gridProduct;
+
+		$timeline = [
+				$tI => $timeline[$tI],
+		];
+	}
 }
 
-//printGrid($grid);
-//echo PHP_EOL;
-//printPoints($points);
-//echo PHP_EOL;
-printTimeline($timeline);
+if ($minimalGridProduct < 10 ** 3) {
+	echo str_repeat('-', 76) . PHP_EOL;
+	echo '| ' . $minimalGrid . PHP_EOL;
+	echo str_repeat('-', 76) . PHP_EOL;
+	echo PHP_EOL;
+	printPoints($timeline[$minimalGrid]);
+}
 
 function printGrid(array $grid) : void {
 	foreach ($grid as $y) {
@@ -90,15 +92,4 @@ function printPoints(array $points): void {
 	}
 
 	printGrid($grid);
-}
-
-function printTimeline(array $timeline): void {
-	foreach ($timeline as $t => $points) {
-		echo str_repeat('-', 40) . PHP_EOL;
-		echo '| ' . $t . PHP_EOL;
-		echo str_repeat('-', 40) . PHP_EOL;
-		echo PHP_EOL;
-		printPoints($points);
-		echo PHP_EOL;
-	}
 }
