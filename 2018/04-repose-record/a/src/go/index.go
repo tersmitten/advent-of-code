@@ -26,15 +26,11 @@ func Strtotime(str string) (int64, error) {
 
 func main() {
 	lines := []string{}
-	asleep := make(map[int]float64, 0)
+	asleep := make(map[int]int, 0)
 	asleepMinutes := make(map[int]map[int]int, 0)
 
-	var guard int
+	var guard, guardWithMostSleep, maxSleep, maxFrequency, minuteMostSpendSleeping int
 	var fallsAsleepTimestamp int64
-	var maxSleep float64
-	var guardWithMostSleep int
-	var maxFrequency int
-	var minuteMostSpendSleeping int;
 
 	scanner := bufio.NewScanner(os.Stdin)
 	for scanner.Scan() {
@@ -50,8 +46,6 @@ func main() {
 	for _, line := range lines {
 		shiftStartMatches := regexp.MustCompile("^\\[(.*)\\] Guard #(\\d+) begins shift$").FindStringSubmatch(line)
 		if len(shiftStartMatches) > 0 {
-			//shiftStart := shiftStartMatches[1]
-			//shiftStartTimestamp, _ := Strtotime(shiftStart)
 			guard, _ = strconv.Atoi(shiftStartMatches[2])
 
 			continue;
@@ -70,7 +64,7 @@ func main() {
 			wakesUp := wakesUpMatches[1]
 			wakesUpTimestamp, _ := Strtotime(wakesUp)
 
-			asleep[guard] += math.Abs(float64(fallsAsleepTimestamp - wakesUpTimestamp)) / Minute
+			asleep[guard] += int(math.Abs(float64(fallsAsleepTimestamp - wakesUpTimestamp)) / Minute)
 
 			for timestamp := fallsAsleepTimestamp; timestamp < wakesUpTimestamp; timestamp += Minute {
 				minute := time.Unix(timestamp, 0).UTC().Minute()
