@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"flag"
 	"fmt"
 	"math"
 	"os"
@@ -19,9 +20,7 @@ type Point struct {
 type Points map[int]Point
 type TimeLine map[int]Points
 
-const S  = 5
-
-func PrintGrid(grid map[int]map[int]string) {
+func PrintGrid(grid [][]string) {
 	for _, y := range grid {
 		for _, x := range y {
 			fmt.Print(x)
@@ -43,25 +42,38 @@ func PrintPoints(points Points) {
 		maximalY = int(math.Max(float64(maximalY), float64(point.y)))
 	}
 
-	grid := make(map[int]map[int]string, 0)
-	for y := minimalY; y <= maximalY; y += 1 {
-		if _, ok := grid[y]; !ok {
-			grid[y] = make(map[int]string, 0)
-		}
+	correctionX := 0 - minimalX
+	correctionY := 0 - minimalY
 
-		for x := minimalX; x <= maximalX; x += 1 {
+	deltaX := int(math.Abs(float64(minimalX - maximalX)))
+	deltaY := int(math.Abs(float64(minimalY - maximalY)))
+
+	grid := make([][]string, deltaY + 1)
+	for y := 0; y <= deltaY; y += 1 {
+		grid[y] = make([]string, deltaX + 1)
+		for x := 0; x <= deltaX; x += 1 {
 			grid[y][x] = "."
 		}
 	}
 
 	for _, point := range points {
-		grid[point.y][point.x] = "#"
+		grid[point.y + correctionY][point.x + correctionX] = "#"
 	}
 
 	PrintGrid(grid)
 }
 
 func main() {
+	var maximumNumberOfSeconds int
+
+	flag.IntVar(&maximumNumberOfSeconds, "s", 0, "Maximum number of seconds")
+	flag.Parse()
+
+	if maximumNumberOfSeconds <= 0 {
+		fmt.Fprintf(os.Stderr, "Usage: %v [-s Maximum number of seconds]\n", os.Args[0])
+		os.Exit(1)
+	}
+
 	points := []Point{}
 	timeline := make(TimeLine, 0)
 
@@ -86,10 +98,9 @@ func main() {
 	}
 
 	minimalGrid := 0
-	minimalGridSize := []int{}
 	minimalGridProduct := math.MaxUint32
 
-	for tI := 1; tI < S; tI += 1 {
+	for tI := 1; tI < maximumNumberOfSeconds - 1; tI += 1 {
 		if _, ok := timeline[tI]; !ok {
 			timeline[tI] = make(Points, 0)
 		}
@@ -115,7 +126,6 @@ func main() {
 		gridProduct := deltaX * deltaY
 		if gridProduct < minimalGridProduct {
 			minimalGrid = tI
-			minimalGridSize = []int{deltaX, deltaY}
 			minimalGridProduct = gridProduct
 
 			timeline = TimeLine {
@@ -124,11 +134,10 @@ func main() {
 		}
 	}
 
-	if (minimalGridProduct < int(math.Pow(float64(10), float64(3)))) {
-		fmt.Println(minimalGrid)
-		fmt.Println(minimalGridSize)
-		fmt.Println(minimalGridProduct)
-
+	if minimalGridProduct < int(math.Pow(float64(10), float64(3))) {
+		fmt.Println(strings.Repeat("-", 76))
+		fmt.Println(fmt.Sprintf("| %d", minimalGrid))
+		fmt.Println(strings.Repeat("-", 76))
 		PrintPoints(timeline[minimalGrid])
 	}
 }
