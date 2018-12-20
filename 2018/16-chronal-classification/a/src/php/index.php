@@ -234,10 +234,7 @@ function gtir(array $registers, int $a, int $b, int $c) : array {
 		throw new OutOfRangeException();
 	}
 
-	$registers[$c] = 0;
-	if ($a > $registers[$b]) {
-		$registers[$c] = 1;
-	}
+	$registers[$c] = $a > $registers[$b] ? 1 : 0;
 
 	return $registers;
 }
@@ -247,10 +244,7 @@ function gtri(array $registers, int $a, int $b, int $c) : array {
 		throw new OutOfRangeException();
 	}
 
-	$registers[$c] = 0;
-	if ($registers[$a] > $b) {
-		$registers[$c] = 1;
-	}
+	$registers[$c] = $registers[$a] > $b ? 1 : 0;
 
 	return $registers;
 }
@@ -260,10 +254,7 @@ function gtrr(array $registers, int $a, int $b, int $c) : array {
 		throw new OutOfRangeException();
 	}
 
-	$registers[$c] = 0;
-	if ($registers[$a] > $registers[$b]) {
-		$registers[$c] = 1;
-	}
+	$registers[$c] = $registers[$a] > $registers[$b] ? 1 : 0;
 
 	return $registers;
 }
@@ -275,10 +266,7 @@ function eqir(array $registers, int $a, int $b, int $c) : array {
 		throw new OutOfRangeException();
 	}
 
-	$registers[$c] = 0;
-	if ($a === $registers[$b]) {
-		$registers[$c] = 1;
-	}
+	$registers[$c] = $a === $registers[$b] ? 1 : 0;
 
 	return $registers;
 }
@@ -288,10 +276,7 @@ function eqri(array $registers, int $a, int $b, int $c) : array {
 		throw new OutOfRangeException();
 	}
 
-	$registers[$c] = 0;
-	if ($registers[$a] === $b) {
-		$registers[$c] = 1;
-	}
+	$registers[$c] = $registers[$a] === $b ? 1 : 0;
 
 	return $registers;
 }
@@ -301,10 +286,7 @@ function eqrr(array $registers, int $a, int $b, int $c) : array {
 		throw new OutOfRangeException();
 	}
 
-	$registers[$c] = 0;
-	if ($registers[$a] === $registers[$b]) {
-		$registers[$c] = 1;
-	}
+	$registers[$c] = $registers[$a] === $registers[$b] ? 1 : 0;
 
 	return $registers;
 }
