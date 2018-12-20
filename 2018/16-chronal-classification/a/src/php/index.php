@@ -1,7 +1,8 @@
 #!/usr/bin/env php
 <?php
-$samples = $formattedSamples = [];
+$samples = $formattedSamples = $sampleThatBehavesLikeXOpcodes = [];
 $registers = array_fill(0, 4, 0);
+$opcodes = get_defined_functions()['user'];
 
 $fileContent  = file_get_contents('php://stdin');
 
@@ -70,6 +71,11 @@ assert(eqri([3, 0, 0, 0], 0, 7, 3) === [3, 0, 0, 0]);
 assert(eqrr([0, 0, 0, 0], 1, 2, 3) === [0, 0, 0, 1]);
 assert(eqrr([1, 2, 3, 4], 1, 2, 3) === [1, 2, 3, 0]);
 
+// Example(s)
+assert(mulr([3, 2, 1, 1], 2, 1, 2) === [3, 2, 2, 1]);
+assert(addi([3, 2, 1, 1], 2, 1, 2) === [3, 2, 2, 1]);
+assert(seti([3, 2, 1, 1], 2, 1, 2) === [3, 2, 2, 1]);
+
 foreach (array_slice($matches, 1) as $i => $match) {
 	foreach ($match as $j => $value) {
 		$samples[$j][$i] = $value;
@@ -81,13 +87,41 @@ foreach ($samples as $sample) {
 	$formattedSamples[] = compact('before', 'instruction', 'after');
 }
 
-print_r(compact('samples', 'formattedSamples', 'registers'));
+$sampleThatBehavesLikeXOpcodes = array_fill(0, count($formattedSamples), 0);
+
+// print_r(compact('samples', 'formattedSamples', 'registers', 'opcodes', 'sampleThatBehavesLikeXOpcodes'));
+
+foreach ($formattedSamples as $i => $formattedSample) {
+	$expected = $formattedSample['after'];
+	list($a, $b, $c) = array_slice($formattedSample['instruction'], 1, 3);
+	// print_r(compact('formattedSample', 'expected', 'a', 'b', 'c'));
+
+	foreach ($opcodes as $opcode) {
+		try {
+			$actual = $opcode($formattedSample['before'], $a, $b, $c);
+		} catch (OutOfRangeException $e) {
+			unset($e);
+			continue;
+		}
+
+		if ($actual === $expected) {
+			$sampleThatBehavesLikeXOpcodes[$i] += 1;
+		}
+	}
+}
+
+print_r(compact('sampleThatBehavesLikeXOpcodes'));
+
+$sampleThatBehavesLikeThreeOrMoreOpcodes = array_filter($sampleThatBehavesLikeXOpcodes, function(int $v) : bool {
+    return $v >= 3;
+});
+echo count($sampleThatBehavesLikeThreeOrMoreOpcodes) . PHP_EOL;
 
 // Addition
 
 function addr(array $registers, int $a, int $b, int $c) : array {
 	if (!isset($registers[$a], $registers[$b], $registers[$c])) {
-		throw new OutOfBoundsException();
+		throw new OutOfRangeException();
 	}
 
 	$registers[$c] = $registers[$a] + $registers[$b];
@@ -97,7 +131,7 @@ function addr(array $registers, int $a, int $b, int $c) : array {
 
 function addi(array $registers, int $a, int $b, int $c) : array {
 	if (!isset($registers[$a], $registers[$c])) {
-		throw new OutOfBoundsException();
+		throw new OutOfRangeException();
 	}
 
 	$registers[$c] = $registers[$a] + $b;
@@ -109,7 +143,7 @@ function addi(array $registers, int $a, int $b, int $c) : array {
 
 function mulr(array $registers, int $a, int $b, int $c) : array {
 	if (!isset($registers[$a], $registers[$b], $registers[$c])) {
-		throw new OutOfBoundsException();
+		throw new OutOfRangeException();
 	}
 
 	$registers[$c] = $registers[$a] * $registers[$b];
@@ -119,7 +153,7 @@ function mulr(array $registers, int $a, int $b, int $c) : array {
 
 function muli(array $registers, int $a, int $b, int $c) : array {
 	if (!isset($registers[$a], $registers[$c])) {
-		throw new OutOfBoundsException();
+		throw new OutOfRangeException();
 	}
 
 	$registers[$c] = $registers[$a] * $b;
@@ -131,7 +165,7 @@ function muli(array $registers, int $a, int $b, int $c) : array {
 
 function banr(array $registers, int $a, int $b, int $c) : array {
 	if (!isset($registers[$a], $registers[$b], $registers[$c])) {
-		throw new OutOfBoundsException();
+		throw new OutOfRangeException();
 	}
 
 	$registers[$c] = $registers[$a] & $registers[$b];
@@ -141,7 +175,7 @@ function banr(array $registers, int $a, int $b, int $c) : array {
 
 function bani(array $registers, int $a, int $b, int $c) : array {
 	if (!isset($registers[$a], $registers[$c])) {
-		throw new OutOfBoundsException();
+		throw new OutOfRangeException();
 	}
 
 	$registers[$c] = $registers[$a] & $b;
@@ -153,7 +187,7 @@ function bani(array $registers, int $a, int $b, int $c) : array {
 
 function borr(array $registers, int $a, int $b, int $c) : array {
 	if (!isset($registers[$a], $registers[$b], $registers[$c])) {
-		throw new OutOfBoundsException();
+		throw new OutOfRangeException();
 	}
 
 	$registers[$c] = $registers[$a] | $registers[$b];
@@ -163,7 +197,7 @@ function borr(array $registers, int $a, int $b, int $c) : array {
 
 function bori(array $registers, int $a, int $b, int $c) : array {
 	if (!isset($registers[$a], $registers[$c])) {
-		throw new OutOfBoundsException();
+		throw new OutOfRangeException();
 	}
 
 	$registers[$c] = $registers[$a] | $b;
@@ -175,7 +209,7 @@ function bori(array $registers, int $a, int $b, int $c) : array {
 
 function setr(array $registers, int $a, int $b, int $c) : array {
 	if (!isset($registers[$a], $registers[$c])) {
-		throw new OutOfBoundsException();
+		throw new OutOfRangeException();
 	}
 
 	$registers[$c] = $registers[$a];
@@ -185,7 +219,7 @@ function setr(array $registers, int $a, int $b, int $c) : array {
 
 function seti(array $registers, int $a, int $b, int $c) : array {
 	if (!isset($registers[$c])) {
-		throw new OutOfBoundsException();
+		throw new OutOfRangeException();
 	}
 
 	$registers[$c] = $a;
@@ -197,7 +231,7 @@ function seti(array $registers, int $a, int $b, int $c) : array {
 
 function gtir(array $registers, int $a, int $b, int $c) : array {
 	if (!isset($registers[$b], $registers[$c])) {
-		throw new OutOfBoundsException();
+		throw new OutOfRangeException();
 	}
 
 	$registers[$c] = 0;
@@ -210,7 +244,7 @@ function gtir(array $registers, int $a, int $b, int $c) : array {
 
 function gtri(array $registers, int $a, int $b, int $c) : array {
 	if (!isset($registers[$a], $registers[$c])) {
-		throw new OutOfBoundsException();
+		throw new OutOfRangeException();
 	}
 
 	$registers[$c] = 0;
@@ -223,7 +257,7 @@ function gtri(array $registers, int $a, int $b, int $c) : array {
 
 function gtrr(array $registers, int $a, int $b, int $c) : array {
 	if (!isset($registers[$a], $registers[$b], $registers[$c])) {
-		throw new OutOfBoundsException();
+		throw new OutOfRangeException();
 	}
 
 	$registers[$c] = 0;
@@ -238,7 +272,7 @@ function gtrr(array $registers, int $a, int $b, int $c) : array {
 
 function eqir(array $registers, int $a, int $b, int $c) : array {
 	if (!isset($registers[$b], $registers[$c])) {
-		throw new OutOfBoundsException();
+		throw new OutOfRangeException();
 	}
 
 	$registers[$c] = 0;
@@ -251,7 +285,7 @@ function eqir(array $registers, int $a, int $b, int $c) : array {
 
 function eqri(array $registers, int $a, int $b, int $c) : array {
 	if (!isset($registers[$a], $registers[$c])) {
-		throw new OutOfBoundsException();
+		throw new OutOfRangeException();
 	}
 
 	$registers[$c] = 0;
@@ -264,7 +298,7 @@ function eqri(array $registers, int $a, int $b, int $c) : array {
 
 function eqrr(array $registers, int $a, int $b, int $c) : array {
 	if (!isset($registers[$a], $registers[$b], $registers[$c])) {
-		throw new OutOfBoundsException();
+		throw new OutOfRangeException();
 	}
 
 	$registers[$c] = 0;
