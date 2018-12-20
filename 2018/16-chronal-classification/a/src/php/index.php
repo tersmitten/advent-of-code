@@ -40,11 +40,35 @@ assert(bani([3, 0, 0, 0], 0, 7, 3) === [3, 0, 0, 3]);
 
 // Bitwise OR
 
+assert(borr([0, 0, 0, 0], 1, 2, 3) === [0, 0, 0, 0]);
+assert(borr([1, 2, 3, 4], 1, 2, 3) === [1, 2, 3, 3]);
+assert(bori([0, 0, 0, 0], 0, 7, 3) === [0, 0, 0, 7]);
+assert(bori([3, 0, 0, 0], 0, 7, 3) === [3, 0, 0, 7]);
+
 // Assignment
+
+assert(setr([0, 0, 0, 0], 1, 2, 3) === [0, 0, 0, 0]);
+assert(setr([1, 2, 3, 4], 1, 2, 3) === [1, 2, 3, 2]);
+assert(seti([0, 0, 0, 0], 0, 7, 3) === [0, 0, 0, 0]);
+assert(seti([3, 0, 0, 0], 0, 7, 3) === [3, 0, 0, 0]);
 
 // Greater-than testing
 
+assert(gtir([0, 0, 0, 0], 1, 2, 3) === [0, 0, 0, 1]);
+assert(gtir([1, 2, 3, 4], 1, 2, 3) === [1, 2, 3, 0]);
+assert(gtri([0, 0, 0, 0], 0, 7, 3) === [0, 0, 0, 0]);
+assert(gtri([3, 0, 0, 0], 0, 7, 3) === [3, 0, 0, 0]);
+assert(gtrr([0, 0, 0, 0], 1, 2, 3) === [0, 0, 0, 0]);
+assert(gtrr([1, 2, 3, 4], 1, 2, 3) === [1, 2, 3, 0]);
+
 // Equality testing
+
+assert(eqir([0, 0, 0, 0], 1, 2, 3) === [0, 0, 0, 0]);
+assert(eqir([1, 2, 3, 4], 1, 2, 3) === [1, 2, 3, 0]);
+assert(eqri([0, 0, 0, 0], 0, 7, 3) === [0, 0, 0, 0]);
+assert(eqri([3, 0, 0, 0], 0, 7, 3) === [3, 0, 0, 0]);
+assert(eqrr([0, 0, 0, 0], 1, 2, 3) === [0, 0, 0, 1]);
+assert(eqrr([1, 2, 3, 4], 1, 2, 3) === [1, 2, 3, 0]);
 
 foreach (array_slice($matches, 1) as $i => $match) {
 	foreach ($match as $j => $value) {
@@ -62,12 +86,20 @@ print_r(compact('samples', 'formattedSamples', 'registers'));
 // Addition
 
 function addr(array $registers, int $a, int $b, int $c) : array {
+	if (!isset($registers[$a], $registers[$b], $registers[$c])) {
+		throw new OutOfBoundsException();
+	}
+
 	$registers[$c] = $registers[$a] + $registers[$b];
 
 	return $registers;
 }
 
 function addi(array $registers, int $a, int $b, int $c) : array {
+	if (!isset($registers[$a], $registers[$c])) {
+		throw new OutOfBoundsException();
+	}
+
 	$registers[$c] = $registers[$a] + $b;
 
 	return $registers;
@@ -76,12 +108,20 @@ function addi(array $registers, int $a, int $b, int $c) : array {
 // Multiplication
 
 function mulr(array $registers, int $a, int $b, int $c) : array {
+	if (!isset($registers[$a], $registers[$b], $registers[$c])) {
+		throw new OutOfBoundsException();
+	}
+
 	$registers[$c] = $registers[$a] * $registers[$b];
 
 	return $registers;
 }
 
 function muli(array $registers, int $a, int $b, int $c) : array {
+	if (!isset($registers[$a], $registers[$c])) {
+		throw new OutOfBoundsException();
+	}
+
 	$registers[$c] = $registers[$a] * $b;
 
 	return $registers;
@@ -90,12 +130,20 @@ function muli(array $registers, int $a, int $b, int $c) : array {
 // Bitwise AND
 
 function banr(array $registers, int $a, int $b, int $c) : array {
+	if (!isset($registers[$a], $registers[$b], $registers[$c])) {
+		throw new OutOfBoundsException();
+	}
+
 	$registers[$c] = $registers[$a] & $registers[$b];
 
 	return $registers;
 }
 
 function bani(array $registers, int $a, int $b, int $c) : array {
+	if (!isset($registers[$a], $registers[$c])) {
+		throw new OutOfBoundsException();
+	}
+
 	$registers[$c] = $registers[$a] & $b;
 
 	return $registers;
@@ -104,12 +152,20 @@ function bani(array $registers, int $a, int $b, int $c) : array {
 // Bitwise OR
 
 function borr(array $registers, int $a, int $b, int $c) : array {
+	if (!isset($registers[$a], $registers[$b], $registers[$c])) {
+		throw new OutOfBoundsException();
+	}
+
 	$registers[$c] = $registers[$a] | $registers[$b];
 
 	return $registers;
 }
 
 function bori(array $registers, int $a, int $b, int $c) : array {
+	if (!isset($registers[$a], $registers[$c])) {
+		throw new OutOfBoundsException();
+	}
+
 	$registers[$c] = $registers[$a] | $b;
 
 	return $registers;
@@ -118,12 +174,20 @@ function bori(array $registers, int $a, int $b, int $c) : array {
 // Assignment
 
 function setr(array $registers, int $a, int $b, int $c) : array {
+	if (!isset($registers[$a], $registers[$c])) {
+		throw new OutOfBoundsException();
+	}
+
 	$registers[$c] = $registers[$a];
 
 	return $registers;
 }
 
 function seti(array $registers, int $a, int $b, int $c) : array {
+	if (!isset($registers[$c])) {
+		throw new OutOfBoundsException();
+	}
+
 	$registers[$c] = $a;
 
 	return $registers;
@@ -132,6 +196,10 @@ function seti(array $registers, int $a, int $b, int $c) : array {
 // Greater-than testing
 
 function gtir(array $registers, int $a, int $b, int $c) : array {
+	if (!isset($registers[$b], $registers[$c])) {
+		throw new OutOfBoundsException();
+	}
+
 	$registers[$c] = 0;
 	if ($a > $registers[$b]) {
 		$registers[$c] = 1;
@@ -141,6 +209,10 @@ function gtir(array $registers, int $a, int $b, int $c) : array {
 }
 
 function gtri(array $registers, int $a, int $b, int $c) : array {
+	if (!isset($registers[$a], $registers[$c])) {
+		throw new OutOfBoundsException();
+	}
+
 	$registers[$c] = 0;
 	if ($registers[$a] > $b) {
 		$registers[$c] = 1;
@@ -150,6 +222,10 @@ function gtri(array $registers, int $a, int $b, int $c) : array {
 }
 
 function gtrr(array $registers, int $a, int $b, int $c) : array {
+	if (!isset($registers[$a], $registers[$b], $registers[$c])) {
+		throw new OutOfBoundsException();
+	}
+
 	$registers[$c] = 0;
 	if ($registers[$a] > $registers[$b]) {
 		$registers[$c] = 1;
@@ -161,6 +237,10 @@ function gtrr(array $registers, int $a, int $b, int $c) : array {
 // Equality testing
 
 function eqir(array $registers, int $a, int $b, int $c) : array {
+	if (!isset($registers[$b], $registers[$c])) {
+		throw new OutOfBoundsException();
+	}
+
 	$registers[$c] = 0;
 	if ($a === $registers[$b]) {
 		$registers[$c] = 1;
@@ -170,6 +250,10 @@ function eqir(array $registers, int $a, int $b, int $c) : array {
 }
 
 function eqri(array $registers, int $a, int $b, int $c) : array {
+	if (!isset($registers[$a], $registers[$c])) {
+		throw new OutOfBoundsException();
+	}
+
 	$registers[$c] = 0;
 	if ($registers[$a] === $b) {
 		$registers[$c] = 1;
@@ -179,6 +263,10 @@ function eqri(array $registers, int $a, int $b, int $c) : array {
 }
 
 function eqrr(array $registers, int $a, int $b, int $c) : array {
+	if (!isset($registers[$a], $registers[$b], $registers[$c])) {
+		throw new OutOfBoundsException();
+	}
+
 	$registers[$c] = 0;
 	if ($registers[$a] === $registers[$b]) {
 		$registers[$c] = 1;
