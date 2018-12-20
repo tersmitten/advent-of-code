@@ -120,20 +120,12 @@ echo count($sampleThatBehavesLikeThreeOrMoreOpcodes) . PHP_EOL;
 // Addition
 
 function addr(array $registers, int $a, int $b, int $c) : array {
-	if (!isset($registers[$a], $registers[$b], $registers[$c])) {
-		throw new OutOfRangeException();
-	}
-
 	$registers[$c] = $registers[$a] + $registers[$b];
 
 	return $registers;
 }
 
 function addi(array $registers, int $a, int $b, int $c) : array {
-	if (!isset($registers[$a], $registers[$c])) {
-		throw new OutOfRangeException();
-	}
-
 	$registers[$c] = $registers[$a] + $b;
 
 	return $registers;
@@ -142,20 +134,12 @@ function addi(array $registers, int $a, int $b, int $c) : array {
 // Multiplication
 
 function mulr(array $registers, int $a, int $b, int $c) : array {
-	if (!isset($registers[$a], $registers[$b], $registers[$c])) {
-		throw new OutOfRangeException();
-	}
-
 	$registers[$c] = $registers[$a] * $registers[$b];
 
 	return $registers;
 }
 
 function muli(array $registers, int $a, int $b, int $c) : array {
-	if (!isset($registers[$a], $registers[$c])) {
-		throw new OutOfRangeException();
-	}
-
 	$registers[$c] = $registers[$a] * $b;
 
 	return $registers;
@@ -164,20 +148,12 @@ function muli(array $registers, int $a, int $b, int $c) : array {
 // Bitwise AND
 
 function banr(array $registers, int $a, int $b, int $c) : array {
-	if (!isset($registers[$a], $registers[$b], $registers[$c])) {
-		throw new OutOfRangeException();
-	}
-
 	$registers[$c] = $registers[$a] & $registers[$b];
 
 	return $registers;
 }
 
 function bani(array $registers, int $a, int $b, int $c) : array {
-	if (!isset($registers[$a], $registers[$c])) {
-		throw new OutOfRangeException();
-	}
-
 	$registers[$c] = $registers[$a] & $b;
 
 	return $registers;
@@ -186,20 +162,12 @@ function bani(array $registers, int $a, int $b, int $c) : array {
 // Bitwise OR
 
 function borr(array $registers, int $a, int $b, int $c) : array {
-	if (!isset($registers[$a], $registers[$b], $registers[$c])) {
-		throw new OutOfRangeException();
-	}
-
 	$registers[$c] = $registers[$a] | $registers[$b];
 
 	return $registers;
 }
 
 function bori(array $registers, int $a, int $b, int $c) : array {
-	if (!isset($registers[$a], $registers[$c])) {
-		throw new OutOfRangeException();
-	}
-
 	$registers[$c] = $registers[$a] | $b;
 
 	return $registers;
@@ -208,20 +176,12 @@ function bori(array $registers, int $a, int $b, int $c) : array {
 // Assignment
 
 function setr(array $registers, int $a, int $b, int $c) : array {
-	if (!isset($registers[$a], $registers[$c])) {
-		throw new OutOfRangeException();
-	}
-
 	$registers[$c] = $registers[$a];
 
 	return $registers;
 }
 
 function seti(array $registers, int $a, int $b, int $c) : array {
-	if (!isset($registers[$c])) {
-		throw new OutOfRangeException();
-	}
-
 	$registers[$c] = $a;
 
 	return $registers;
@@ -230,30 +190,18 @@ function seti(array $registers, int $a, int $b, int $c) : array {
 // Greater-than testing
 
 function gtir(array $registers, int $a, int $b, int $c) : array {
-	if (!isset($registers[$b], $registers[$c])) {
-		throw new OutOfRangeException();
-	}
-
 	$registers[$c] = $a > $registers[$b] ? 1 : 0;
 
 	return $registers;
 }
 
 function gtri(array $registers, int $a, int $b, int $c) : array {
-	if (!isset($registers[$a], $registers[$c])) {
-		throw new OutOfRangeException();
-	}
-
 	$registers[$c] = $registers[$a] > $b ? 1 : 0;
 
 	return $registers;
 }
 
 function gtrr(array $registers, int $a, int $b, int $c) : array {
-	if (!isset($registers[$a], $registers[$b], $registers[$c])) {
-		throw new OutOfRangeException();
-	}
-
 	$registers[$c] = $registers[$a] > $registers[$b] ? 1 : 0;
 
 	return $registers;
@@ -262,30 +210,18 @@ function gtrr(array $registers, int $a, int $b, int $c) : array {
 // Equality testing
 
 function eqir(array $registers, int $a, int $b, int $c) : array {
-	if (!isset($registers[$b], $registers[$c])) {
-		throw new OutOfRangeException();
-	}
-
 	$registers[$c] = $a === $registers[$b] ? 1 : 0;
 
 	return $registers;
 }
 
 function eqri(array $registers, int $a, int $b, int $c) : array {
-	if (!isset($registers[$a], $registers[$c])) {
-		throw new OutOfRangeException();
-	}
-
 	$registers[$c] = $registers[$a] === $b ? 1 : 0;
 
 	return $registers;
 }
 
 function eqrr(array $registers, int $a, int $b, int $c) : array {
-	if (!isset($registers[$a], $registers[$b], $registers[$c])) {
-		throw new OutOfRangeException();
-	}
-
 	$registers[$c] = $registers[$a] === $registers[$b] ? 1 : 0;
 
 	return $registers;
