@@ -1,7 +1,6 @@
 #!/usr/bin/env php
 <?php
 $samples = [];
-$registers = array_fill(0, 4, 0);
 $opcodes = get_defined_functions()['user'];
 
 $f = fopen('php://stdin', 'r');
@@ -93,7 +92,7 @@ $sampleThatBehavesLikeXOpcodes = array_fill(0, count($samples), 0);
 
 foreach ($samples as $i => $sample) {
 	$expected = $sample['after'];
-	list($opcode, $a, $b, $c) = $sample['instruction'];
+	[$opcode, $a, $b, $c] = $sample['instruction'];
 	// print_r(compact('formattedSample'));
 
 	foreach ($opcodes as $opcodeName) {
