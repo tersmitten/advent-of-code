@@ -1,6 +1,6 @@
 #!/usr/bin/env php
 <?php
-$samples = $formattedSamples = $sampleThatBehavesLikeXOpcodes = [];
+$samples = [];
 $registers = array_fill(0, 4, 0);
 $opcodes = get_defined_functions()['user'];
 
@@ -26,7 +26,7 @@ foreach ($lines as $line) {
 	if (preg_match('/^After:  \[(\d+), (\d+), (\d+), (\d+)\]$/', $line, $matches) > 0) {
 		$after = array_map('intval', array_slice($matches, 1, 4));
 
-		$formattedSamples[] = compact('before', 'instruction', 'after');
+		$samples[] = compact('before', 'instruction', 'after');
 	}
 }
 // Addition
@@ -87,17 +87,17 @@ assert(mulr([3, 2, 1, 1], 2, 1, 2) === [3, 2, 2, 1]);
 assert(addi([3, 2, 1, 1], 2, 1, 2) === [3, 2, 2, 1]);
 assert(seti([3, 2, 1, 1], 2, 1, 2) === [3, 2, 2, 1]);
 
-$sampleThatBehavesLikeXOpcodes = array_fill(0, count($formattedSamples), 0);
+$sampleThatBehavesLikeXOpcodes = array_fill(0, count($samples), 0);
 
-// print_r(compact('samples', 'formattedSamples', 'registers', 'opcodes', 'sampleThatBehavesLikeXOpcodes'));
+// print_r(compact('samples', 'registers', 'opcodes', 'sampleThatBehavesLikeXOpcodes'));
 
-foreach ($formattedSamples as $i => $formattedSample) {
-	$expected = $formattedSample['after'];
-	list($opcode, $a, $b, $c) = $formattedSample['instruction'];
+foreach ($samples as $i => $sample) {
+	$expected = $sample['after'];
+	list($opcode, $a, $b, $c) = $sample['instruction'];
 	// print_r(compact('formattedSample'));
 
 	foreach ($opcodes as $opcodeName) {
-		$actual = $opcodeName($formattedSample['before'], $a, $b, $c);
+		$actual = $opcodeName($sample['before'], $a, $b, $c);
 		$same = $actual == $expected;
 		// print_r(compact('opcodeName', 'a', 'b', 'c', 'expected', 'actual', 'same'));
 		if ($same) {
