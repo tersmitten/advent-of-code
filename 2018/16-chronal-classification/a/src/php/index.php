@@ -4,20 +4,31 @@ $samples = $formattedSamples = $sampleThatBehavesLikeXOpcodes = [];
 $registers = array_fill(0, 4, 0);
 $opcodes = get_defined_functions()['user'];
 
-$fileContent  = file_get_contents('php://stdin');
-
-$pattern = '/';
-$pattern .= 'Before:\s+\[(\d+),\s+(\d+),\s+(\d+),\s+(\d+)\]\n';
-$pattern .= '(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\n';
-$pattern .= 'After:\s+\[(\d+),\s+(\d+),\s+(\d+),\s+(\d+)\]\n';
-$pattern .= '/sU';
-
-$pregMatchAll = preg_match_all($pattern, $fileContent, $matches);
-if ($pregMatchAll === false || $pregMatchAll === 0) {
-	fwrite(STDERR, 'No samples found' . PHP_EOL);
-	exit(1);
+$f = fopen('php://stdin', 'r');
+while ($line = fgets($f)) {
+	$lines[] = trim($line);
 }
+fclose($f);
 
+foreach ($lines as $line) {
+	if (empty($line)) {
+		continue;
+	}
+
+	if (preg_match('/^Before: \[(\d+), (\d+), (\d+), (\d+)\]$/', $line, $matches) > 0) {
+		$before = array_map('intval', array_slice($matches, 1, 4));
+	}
+
+	if (preg_match('/^(\d+) (\d+) (\d+) (\d+)$/', $line, $matches) > 0) {
+		$instruction = array_map('intval', array_slice($matches, 1, 4));
+	}
+
+	if (preg_match('/^After:  \[(\d+), (\d+), (\d+), (\d+)\]$/', $line, $matches) > 0) {
+		$after = array_map('intval', array_slice($matches, 1, 4));
+
+		$formattedSamples[] = compact('before', 'instruction', 'after');
+	}
+}
 // Addition
 
 assert(addr([0, 0, 0, 0], 1, 2, 3) === [0, 0, 0, 0]);
@@ -71,21 +82,10 @@ assert(eqri([3, 0, 0, 0], 0, 7, 3) === [3, 0, 0, 0]);
 assert(eqrr([0, 0, 0, 0], 1, 2, 3) === [0, 0, 0, 1]);
 assert(eqrr([1, 2, 3, 4], 1, 2, 3) === [1, 2, 3, 0]);
 
-// Example(s)
+// Example
 assert(mulr([3, 2, 1, 1], 2, 1, 2) === [3, 2, 2, 1]);
 assert(addi([3, 2, 1, 1], 2, 1, 2) === [3, 2, 2, 1]);
 assert(seti([3, 2, 1, 1], 2, 1, 2) === [3, 2, 2, 1]);
-
-foreach (array_slice($matches, 1) as $i => $match) {
-	foreach ($match as $j => $value) {
-		$samples[$j][$i] = $value;
-	}
-}
-
-foreach ($samples as $sample) {
-	list($before, $instruction, $after) = array_chunk($sample, 4);
-	$formattedSamples[] = compact('before', 'instruction', 'after');
-}
 
 $sampleThatBehavesLikeXOpcodes = array_fill(0, count($formattedSamples), 0);
 
@@ -93,24 +93,20 @@ $sampleThatBehavesLikeXOpcodes = array_fill(0, count($formattedSamples), 0);
 
 foreach ($formattedSamples as $i => $formattedSample) {
 	$expected = $formattedSample['after'];
-	list($a, $b, $c) = array_slice($formattedSample['instruction'], 1, 3);
-	// print_r(compact('formattedSample', 'expected', 'a', 'b', 'c'));
+	list($opcode, $a, $b, $c) = $formattedSample['instruction'];
+	// print_r(compact('formattedSample'));
 
-	foreach ($opcodes as $opcode) {
-		try {
-			$actual = $opcode($formattedSample['before'], $a, $b, $c);
-		} catch (OutOfRangeException $e) {
-			unset($e);
-			continue;
-		}
-
-		if ($actual === $expected) {
+	foreach ($opcodes as $opcodeName) {
+		$actual = $opcodeName($formattedSample['before'], $a, $b, $c);
+		$same = $actual == $expected;
+		// print_r(compact('opcodeName', 'a', 'b', 'c', 'expected', 'actual', 'same'));
+		if ($same) {
 			$sampleThatBehavesLikeXOpcodes[$i] += 1;
 		}
 	}
 }
 
-print_r(compact('sampleThatBehavesLikeXOpcodes'));
+// print_r(compact('sampleThatBehavesLikeXOpcodes'));
 
 $sampleThatBehavesLikeThreeOrMoreOpcodes = array_filter($sampleThatBehavesLikeXOpcodes, function(int $v) : bool {
     return $v >= 3;
